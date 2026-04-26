@@ -1,36 +1,138 @@
-<script>
-  function guardar(){
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeriaAlert ELEAM</title>
 
-let nombre = document.getElementById("nombre").value;
-let fecha = document.getElementById("fechaVGI").value;
+<style>
+body{
+font-family:Arial;
+background:#0f172a;
+color:white;
+padding:30px;
+margin:0;
+}
+.box{
+max-width:1100px;
+margin:auto;
+}
+.card{
+background:white;
+color:#111;
+padding:20px;
+border-radius:18px;
+margin-top:20px;
+}
+input,button{
+width:100%;
+padding:10px;
+margin-top:10px;
+border-radius:10px;
+border:1px solid #ccc;
+box-sizing:border-box;
+}
+button{
+background:#2563eb;
+color:white;
+font-weight:bold;
+border:none;
+}
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:20px;
+}
+.item{
+background:#f1f5f9;
+padding:10px;
+border-radius:10px;
+margin-top:8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h1>GeriaAlert ELEAM</h1>
+<p>Corporación Quetelet • Universidad Central</p>
+<p>Última actualización: <span id="fecha"></span></p>
+
+<div class="card">
+<h2>Agregar residente</h2>
+
+<input id="nombre" placeholder="Nombre residente">
+
+<input type="date" id="fechaVGI">
+
+<button onclick="guardar()">Guardar VGI</button>
+</div>
+
+<div class="grid">
+
+<div class="card">
+<h2>🔴 Vencidos</h2>
+<div id="vencidos"></div>
+</div>
+
+<div class="card">
+<h2>🟡 Próximos</h2>
+<div id="proximos"></div>
+</div>
+
+<div class="card">
+<h2>🟢 Al día</h2>
+<div id="aldia"></div>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+document.getElementById("fecha").innerHTML =
+new Date().toLocaleDateString("es-CL");
+
+function guardar(){
+
+let nombre=document.getElementById("nombre").value;
+let fecha=document.getElementById("fechaVGI").value;
 
 if(nombre=="" || fecha==""){
 alert("Completa datos");
 return;
 }
 
-let hoy = new Date();
-let fechaEval = new Date(fecha);
+let hoy=new Date();
+let evalua=new Date(fecha);
 
-let proxima = new Date(fechaEval);
+let proxima=new Date(evalua);
 proxima.setFullYear(proxima.getFullYear()+1);
 
-let diff = Math.floor((proxima - hoy)/(1000*60*60*24));
+let dias=Math.floor((proxima-hoy)/(1000*60*60*24));
 
-let box = document.createElement("div");
-box.className="item";
-box.innerHTML = nombre + " - vence " + proxima.toLocaleDateString("es-CL");
+let div=document.createElement("div");
+div.className="item";
+div.innerHTML=nombre+" - vence "+proxima.toLocaleDateString("es-CL");
 
-if(diff < 0){
-document.getElementById("vencidos").appendChild(box);
+if(dias<0){
+document.getElementById("vencidos").appendChild(div);
 }
-else if(diff <= 30){
-document.getElementById("proximos").appendChild(box);
+else if(dias<=30){
+document.getElementById("proximos").appendChild(div);
 }
 else{
-document.getElementById("aldia").appendChild(box);
+document.getElementById("aldia").appendChild(div);
 }
 
 document.getElementById("nombre").value="";
 document.getElementById("fechaVGI").value="";
 }
+
+</script>
+
+</body>
+</html>
