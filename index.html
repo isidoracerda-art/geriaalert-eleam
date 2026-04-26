@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GeriaAlert ELEAM</title>
+
 <style>
 body{
 margin:0;
@@ -12,10 +13,9 @@ background:linear-gradient(135deg,#0f172a,#1e3a8a);
 color:white;
 padding:30px;
 }
-.container{
-max-width:1200px;
-margin:auto;
-}
+
+.container{max-width:1200px;margin:auto;}
+
 .header{
 background:white;
 color:#111;
@@ -25,21 +25,26 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 flex-wrap:wrap;
+gap:15px;
 }
+
 .header h1{
 margin:0;
 font-size:38px;
 }
+
 .sub{
 color:gray;
 font-size:14px;
 }
+
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
 gap:20px;
 margin-top:25px;
 }
+
 .card{
 background:white;
 color:#111;
@@ -47,20 +52,60 @@ padding:20px;
 border-radius:20px;
 box-shadow:0 10px 25px rgba(0,0,0,.2);
 }
+
 .card h2{
 margin-top:0;
 font-size:18px;
 }
+
 input{
 width:100%;
 padding:10px;
 margin-top:8px;
 border-radius:12px;
 border:1px solid #ddd;
+box-sizing:border-box;
 }
+
+button{
+width:100%;
+padding:12px;
+margin-top:12px;
+border:none;
+border-radius:12px;
+background:#1d4ed8;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
 .red{color:#dc2626;}
 .green{color:#16a34a;}
 .yellow{color:#ca8a04;}
+
+.status{
+padding:8px 12px;
+border-radius:12px;
+font-size:14px;
+font-weight:bold;
+display:inline-block;
+margin-top:8px;
+}
+
+.progress{
+background:#e5e7eb;
+height:20px;
+border-radius:20px;
+overflow:hidden;
+margin-top:10px;
+}
+
+.bar{
+height:100%;
+width:74%;
+background:linear-gradient(90deg,#16a34a,#22c55e);
+}
+
 .footer{
 text-align:center;
 margin-top:30px;
@@ -69,17 +114,20 @@ opacity:.8;
 }
 </style>
 </head>
+
 <body>
 <div class="container">
 
 <div class="header">
 <div>
 <h1>GeriaAlert ELEAM</h1>
-<div class="sub">Sistema premium de seguimiento VGI • 68 residentes</div>
+<div class="sub">Sistema de seguimiento VGI • 68 residentes</div>
+<div class="sub">Corporación Quetelet • Universidad Central</div>
 </div>
+
 <div>
-Universidad Central<br>
-Corporación Quetelet
+<strong>Última actualización:</strong><br>
+<span id="fechaActual"></span>
 </div>
 </div>
 
@@ -93,16 +141,19 @@ Corporación Quetelet
 <div class="card">
 <h2 class="red">Vencen hoy</h2>
 <input value="6">
+<div class="status" style="background:#fee2e2;color:#dc2626;">🔴 Atención</div>
 </div>
 
 <div class="card">
 <h2 class="yellow">Pendientes</h2>
 <input value="18">
+<div class="status" style="background:#fef3c7;color:#ca8a04;">🟡 Revisar</div>
 </div>
 
 <div class="card">
 <h2 class="green">Completados</h2>
 <input value="50">
+<div class="status" style="background:#dcfce7;color:#16a34a;">🟢 Al día</div>
 </div>
 
 </div>
@@ -110,21 +161,52 @@ Corporación Quetelet
 <div class="grid">
 
 <div class="card">
-<h2 class="red">VGI vencen hoy</h2>
-<input value="Dory">
-<input value="Marta">
-<input value="Luis">
+<h2>Buscador residente</h2>
+<input placeholder="Buscar nombre...">
 </div>
 
 <div class="card">
-<h2 class="yellow">Próximos</h2>
-<input value="Ana - 2 días">
-<input value="Pedro - 5 días">
-<input value="Rosa - 7 días">
+<h2>Cumplimiento mensual</h2>
+<strong>50 de 68 evaluados (74%)</strong>
+<div class="progress">
+<div class="bar"></div>
+</div>
 </div>
 
 <div class="card">
-<h2 class="green">Al día</h2>
+<h2>Semáforo General</h2>
+<div class="status" style="background:#dcfce7;color:#16a34a;">🟢 Operativo</div>
+</div>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+<h2>Agregar Residente / VGI</h2>
+
+<label>Nombre residente</label>
+<input placeholder="Ej: Dory González">
+
+<label>Tipo evaluación</label>
+<input value="VGI">
+
+<label>Fecha límite evaluación</label>
+<input type="date">
+
+<button>Guardar Registro</button>
+
+</div>
+
+<div class="card">
+<h2 class="red">VGI próximos a vencer</h2>
+<input value="Dory - 28/04/2026">
+<input value="Marta - 30/04/2026">
+<input value="Luis - 02/05/2026">
+</div>
+
+<div class="card">
+<h2 class="green">Evaluados al día</h2>
 <input value="Carlos">
 <input value="Elena">
 <input value="Julia">
@@ -137,5 +219,13 @@ Proyecto de Innovación Tecnológica • Internado 2026
 </div>
 
 </div>
+
+<script>
+const hoy = new Date();
+document.getElementById("fechaActual").innerHTML =
+hoy.toLocaleDateString("es-CL") + " " +
+hoy.toLocaleTimeString("es-CL",{hour:'2-digit',minute:'2-digit'});
+</script>
+
 </body>
 </html>
