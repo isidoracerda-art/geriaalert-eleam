@@ -184,7 +184,7 @@ opacity:.8;
 <input id="nombre" placeholder="Ej: Dory González">
 
 <label>Tipo evaluación</label>
-<input id="tipo" value="VGI">
+<input value="VGI">
 
 <label>Fecha límite evaluación</label>
 <input type="date" id="fechaVGI">
@@ -195,20 +195,24 @@ opacity:.8;
 
 <div class="card">
 <h2 class="red">VGI próximos a vencer</h2>
-<div id="listaVencer">
-<div class="item">Dory - 28/04/2026</div>
-<div class="item">Marta - 30/04/2026</div>
-<div class="item">Luis - 02/05/2026</div>
-</div>
+
+<input value="Dory - 28/04/2026">
+<input value="Marta - 30/04/2026">
+<input value="Luis - 02/05/2026">
+
+<div id="listaVencer"></div>
+
 </div>
 
 <div class="card">
 <h2 class="green">Evaluados al día</h2>
-<div id="listaDia">
-<div class="item">Carlos</div>
-<div class="item">Elena</div>
-<div class="item">Julia</div>
-</div>
+
+<input value="Carlos">
+<input value="Elena">
+<input value="Julia">
+
+<div id="listaDia"></div>
+
 </div>
 
 </div>
@@ -240,15 +244,15 @@ let hoy = new Date();
 
 let diferencia = Math.floor((fechaLimite - hoy)/(1000*60*60*24));
 
-let nuevo = document.createElement("div");
+let nuevo = document.createElement("input");
 nuevo.className = "item";
 
 if(diferencia <= 30){
-nuevo.innerHTML = nombre + " - " + fechaLimite.toLocaleDateString("es-CL");
+nuevo.value = nombre + " - " + fechaLimite.toLocaleDateString("es-CL");
 document.getElementById("listaVencer").appendChild(nuevo);
 }
 else{
-nuevo.innerHTML = nombre;
+nuevo.value = nombre;
 document.getElementById("listaDia").appendChild(nuevo);
 }
 
