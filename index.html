@@ -28,15 +28,8 @@ flex-wrap:wrap;
 gap:15px;
 }
 
-.header h1{
-margin:0;
-font-size:38px;
-}
-
-.sub{
-color:gray;
-font-size:14px;
-}
+.header h1{margin:0;font-size:38px;}
+.sub{color:gray;font-size:14px;}
 
 .grid{
 display:grid;
@@ -51,11 +44,6 @@ color:#111;
 padding:20px;
 border-radius:20px;
 box-shadow:0 10px 25px rgba(0,0,0,.2);
-}
-
-.card h2{
-margin-top:0;
-font-size:18px;
 }
 
 input{
@@ -104,6 +92,13 @@ margin-top:10px;
 height:100%;
 width:74%;
 background:linear-gradient(90deg,#16a34a,#22c55e);
+}
+
+.item{
+background:#f8fafc;
+padding:10px;
+border-radius:10px;
+margin-top:8px;
 }
 
 .footer{
@@ -186,30 +181,34 @@ opacity:.8;
 <h2>Agregar Residente / VGI</h2>
 
 <label>Nombre residente</label>
-<input placeholder="Ej: Dory González">
+<input id="nombre" placeholder="Ej: Dory González">
 
 <label>Tipo evaluación</label>
-<input value="VGI">
+<input id="tipo" value="VGI">
 
 <label>Fecha límite evaluación</label>
-<input type="date">
+<input type="date" id="fechaVGI">
 
-<button>Guardar Registro</button>
+<button onclick="guardarRegistro()">Guardar Registro</button>
 
 </div>
 
 <div class="card">
 <h2 class="red">VGI próximos a vencer</h2>
-<input value="Dory - 28/04/2026">
-<input value="Marta - 30/04/2026">
-<input value="Luis - 02/05/2026">
+<div id="listaVencer">
+<div class="item">Dory - 28/04/2026</div>
+<div class="item">Marta - 30/04/2026</div>
+<div class="item">Luis - 02/05/2026</div>
+</div>
 </div>
 
 <div class="card">
 <h2 class="green">Evaluados al día</h2>
-<input value="Carlos">
-<input value="Elena">
-<input value="Julia">
+<div id="listaDia">
+<div class="item">Carlos</div>
+<div class="item">Elena</div>
+<div class="item">Julia</div>
+</div>
 </div>
 
 </div>
@@ -225,6 +224,37 @@ const hoy = new Date();
 document.getElementById("fechaActual").innerHTML =
 hoy.toLocaleDateString("es-CL") + " " +
 hoy.toLocaleTimeString("es-CL",{hour:'2-digit',minute:'2-digit'});
+
+function guardarRegistro(){
+
+let nombre = document.getElementById("nombre").value;
+let fecha = document.getElementById("fechaVGI").value;
+
+if(nombre=="" || fecha==""){
+alert("Completa nombre y fecha");
+return;
+}
+
+let fechaLimite = new Date(fecha);
+let hoy = new Date();
+
+let diferencia = Math.floor((fechaLimite - hoy)/(1000*60*60*24));
+
+let nuevo = document.createElement("div");
+nuevo.className = "item";
+
+if(diferencia <= 30){
+nuevo.innerHTML = nombre + " - " + fechaLimite.toLocaleDateString("es-CL");
+document.getElementById("listaVencer").appendChild(nuevo);
+}
+else{
+nuevo.innerHTML = nombre;
+document.getElementById("listaDia").appendChild(nuevo);
+}
+
+document.getElementById("nombre").value="";
+document.getElementById("fechaVGI").value="";
+}
 </script>
 
 </body>
