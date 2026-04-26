@@ -71,33 +71,7 @@ cursor:pointer;
 .green{color:#16a34a;}
 .yellow{color:#ca8a04;}
 
-.status{
-padding:8px 12px;
-border-radius:12px;
-font-size:14px;
-font-weight:bold;
-display:inline-block;
-margin-top:8px;
-}
-
-.progress{
-background:#e5e7eb;
-height:20px;
-border-radius:20px;
-overflow:hidden;
-margin-top:10px;
-}
-
-.bar{
-height:100%;
-width:74%;
-background:linear-gradient(90deg,#16a34a,#22c55e);
-}
-
 .item{
-background:#f8fafc;
-padding:10px;
-border-radius:10px;
 margin-top:8px;
 }
 
@@ -130,47 +104,22 @@ opacity:.8;
 
 <div class="card">
 <h2>Total residentes</h2>
-<input value="68">
+<input id="total" readonly>
 </div>
 
 <div class="card">
 <h2 class="red">Vencen hoy</h2>
-<input value="6">
-<div class="status" style="background:#fee2e2;color:#dc2626;">🔴 Atención</div>
+<input id="vencenHoy" readonly>
 </div>
 
 <div class="card">
 <h2 class="yellow">Pendientes</h2>
-<input value="18">
-<div class="status" style="background:#fef3c7;color:#ca8a04;">🟡 Revisar</div>
+<input id="pendientes" readonly>
 </div>
 
 <div class="card">
 <h2 class="green">Completados</h2>
-<input value="50">
-<div class="status" style="background:#dcfce7;color:#16a34a;">🟢 Al día</div>
-</div>
-
-</div>
-
-<div class="grid">
-
-<div class="card">
-<h2>Buscador residente</h2>
-<input placeholder="Buscar nombre...">
-</div>
-
-<div class="card">
-<h2>Cumplimiento mensual</h2>
-<strong>50 de 68 evaluados (74%)</strong>
-<div class="progress">
-<div class="bar"></div>
-</div>
-</div>
-
-<div class="card">
-<h2>Semáforo General</h2>
-<div class="status" style="background:#dcfce7;color:#16a34a;">🟢 Operativo</div>
+<input id="completados" readonly>
 </div>
 
 </div>
@@ -183,36 +132,20 @@ opacity:.8;
 <label>Nombre residente</label>
 <input id="nombre" placeholder="Ej: Dory González">
 
-<label>Tipo evaluación</label>
-<input value="VGI">
-
-<label>Fecha límite evaluación</label>
+<label>Fecha VGI</label>
 <input type="date" id="fechaVGI">
 
 <button onclick="guardarRegistro()">Guardar Registro</button>
-
 </div>
 
 <div class="card">
 <h2 class="red">VGI próximos a vencer</h2>
-
-<input value="Dory - 28/04/2026">
-<input value="Marta - 30/04/2026">
-<input value="Luis - 02/05/2026">
-
 <div id="listaVencer"></div>
-
 </div>
 
 <div class="card">
 <h2 class="green">Evaluados al día</h2>
-
-<input value="Carlos">
-<input value="Elena">
-<input value="Julia">
-
 <div id="listaDia"></div>
-
 </div>
 
 </div>
@@ -224,10 +157,9 @@ Proyecto de Innovación Tecnológica • Internado 2026
 </div>
 
 <script>
-const hoy = new Date();
+
 document.getElementById("fechaActual").innerHTML =
-hoy.toLocaleDateString("es-CL") + " " +
-hoy.toLocaleTimeString("es-CL",{hour:'2-digit',minute:'2-digit'});
+new Date().toLocaleDateString("es-CL");
 
 function guardarRegistro(){
 
@@ -235,20 +167,28 @@ let nombre = document.getElementById("nombre").value;
 let fecha = document.getElementById("fechaVGI").value;
 
 if(nombre=="" || fecha==""){
-alert("Completa nombre y fecha");
+alert("Completa datos");
 return;
 }
 
-let fechaLimite = new Date(fecha);
 let hoy = new Date();
+let fechaEval = new Date(fecha);
 
-let diferencia = Math.floor((fechaLimite - hoy)/(1000*60*60*24));
+let proxima = new Date(fechaEval);
+proxima.setFullYear(proxima.getFullYear()+1);
+
+let dias = Math.floor((proxima - hoy)/(1000*60*60*24));
 
 let nuevo = document.createElement("input");
-nuevo.className = "item";
+nuevo.className="item";
+nuevo.readOnly=false;
 
-if(diferencia <= 30){
-nuevo.value = nombre + " - " + fechaLimite.toLocaleDateString("es-CL");
+if(dias < 0){
+nuevo.value = nombre + " - VENCIDO";
+document.getElementById("listaVencer").appendChild(nuevo);
+}
+else if(dias <= 30){
+nuevo.value = nombre + " - vence " + proxima.toLocaleDateString("es-CL");
 document.getElementById("listaVencer").appendChild(nuevo);
 }
 else{
@@ -258,7 +198,23 @@ document.getElementById("listaDia").appendChild(nuevo);
 
 document.getElementById("nombre").value="";
 document.getElementById("fechaVGI").value="";
+
+actualizarContadores();
 }
+
+function actualizarContadores(){
+
+let vencer = document.querySelectorAll("#listaVencer input").length;
+let aldia = document.querySelectorAll("#listaDia input").length;
+
+document.getElementById("vencenHoy").value = vencer;
+document.getElementById("pendientes").value = vencer;
+document.getElementById("completados").value = aldia;
+document.getElementById("total").value = vencer + aldia;
+}
+
+actualizarContadores();
+
 </script>
 
 </body>
