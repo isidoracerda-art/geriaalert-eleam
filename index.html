@@ -8,270 +8,174 @@
 <style>
 body{
 margin:0;
-font-family:Arial, Helvetica, sans-serif;
+font-family:Arial;
 background:linear-gradient(135deg,#0f172a,#1e3a8a);
 color:white;
 padding:30px;
 }
-
-.container{max-width:1200px;margin:auto;}
-
-.header{
-background:white;
-color:#111;
-padding:25px;
-border-radius:20px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-flex-wrap:wrap;
-gap:15px;
-}
-
-.header h1{margin:0;font-size:38px;}
-.sub{color:gray;font-size:14px;}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:20px;
-margin-top:25px;
-}
+.container{max-width:1100px;margin:auto;}
 
 .card{
 background:white;
 color:#111;
 padding:20px;
-border-radius:20px;
-box-shadow:0 10px 25px rgba(0,0,0,.2);
+border-radius:18px;
+margin-top:20px;
 }
 
-input{
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+input,button{
 width:100%;
 padding:10px;
 margin-top:8px;
-border-radius:12px;
-border:1px solid #ddd;
+border-radius:10px;
+border:1px solid #ccc;
 box-sizing:border-box;
 }
 
 button{
-width:100%;
-padding:12px;
-margin-top:12px;
-border:none;
-border-radius:12px;
-background:#1d4ed8;
+background:#2563eb;
 color:white;
 font-weight:bold;
+border:none;
 cursor:pointer;
 }
 
-.red{color:#dc2626;}
-.green{color:#16a34a;}
-.yellow{color:#ca8a04;}
-
-.status{
-padding:8px 12px;
-border-radius:12px;
-font-size:14px;
-font-weight:bold;
-display:inline-block;
-margin-top:8px;
-}
-
-.progress{
-background:#e5e7eb;
-height:20px;
-border-radius:20px;
-overflow:hidden;
-margin-top:10px;
-}
-
-.bar{
-height:100%;
-width:74%;
-background:linear-gradient(90deg,#16a34a,#22c55e);
-}
-
 .item{
+background:#f1f5f9;
+padding:10px;
+border-radius:10px;
 margin-top:8px;
-}
-
-.footer{
-text-align:center;
-margin-top:30px;
-font-size:13px;
-opacity:.8;
 }
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
-<div class="header">
-<div>
 <h1>GeriaAlert ELEAM</h1>
-<div class="sub">Sistema de seguimiento VGI • 68 residentes</div>
-<div class="sub">Corporación Quetelet • Universidad Central</div>
-</div>
-
-<div>
-<strong>Última actualización:</strong><br>
-<span id="fechaActual"></span>
-</div>
-</div>
+<p>Corporación Quetelet • Universidad Central</p>
+<p>Última actualización: <span id="fecha"></span></p>
 
 <div class="grid">
 
 <div class="card">
-<h2>Total residentes</h2>
+<h3>Total residentes</h3>
 <input id="total" readonly>
 </div>
 
 <div class="card">
-<h2 class="red">Vencen hoy</h2>
-<input id="vencenHoy" readonly>
+<h3>🔴 Vencidos</h3>
+<input id="vencidosCount" readonly>
 </div>
 
 <div class="card">
-<h2 class="yellow">Pendientes</h2>
-<input id="pendientes" readonly>
+<h3>🟡 Próximos</h3>
+<input id="proximosCount" readonly>
 </div>
 
 <div class="card">
-<h2 class="green">Completados</h2>
-<input id="completados" readonly>
+<h3>🟢 Al día</h3>
+<input id="aldiaCount" readonly>
 </div>
 
-</div>
-
-<div class="grid">
-
-<div class="card">
-<h2>Buscador residente</h2>
-<input placeholder="Buscar nombre...">
 </div>
 
 <div class="card">
-<h2>Cumplimiento mensual</h2>
-<strong>Automático</strong>
-<div class="progress">
-<div class="bar"></div>
-</div>
-</div>
+<h3>Agregar residente</h3>
 
-<div class="card">
-<h2>Semáforo General</h2>
-<div class="status" style="background:#dcfce7;color:#16a34a;">🟢 Operativo</div>
-</div>
-
-</div>
-
-<div class="grid">
-
-<div class="card">
-<h2>Agregar Residente / VGI</h2>
-
-<label>Nombre residente</label>
-<input id="nombre" placeholder="Ej: Dory González">
-
-<label>Fecha VGI</label>
+<input id="nombre" placeholder="Nombre residente">
 <input type="date" id="fechaVGI">
 
-<button onclick="guardarRegistro()">Guardar Registro</button>
+<button onclick="guardar()">Guardar VGI</button>
+</div>
 
+<div class="grid">
+
+<div class="card">
+<h3>🔴 Vencidos</h3>
+<div id="vencidos"></div>
 </div>
 
 <div class="card">
-<h2 class="red">VGI próximos a vencer</h2>
-
-<input value="Dory - 28/04/2026">
-<input value="Marta - 30/04/2026">
-<input value="Luis - 02/05/2026">
-
-<div id="listaVencer"></div>
-
+<h3>🟡 Próximos</h3>
+<div id="proximos"></div>
 </div>
 
 <div class="card">
-<h2 class="green">Evaluados al día</h2>
-
-<input value="Carlos">
-<input value="Elena">
-<input value="Julia">
-
-<div id="listaDia"></div>
-
+<h3>🟢 Al día</h3>
+<div id="aldia"></div>
 </div>
 
-</div>
-
-<div class="footer">
-Proyecto de Innovación Tecnológica • Internado 2026
 </div>
 
 </div>
 
 <script>
 
-const hoy = new Date();
-document.getElementById("fechaActual").innerHTML =
-hoy.toLocaleDateString("es-CL") + " " +
-hoy.toLocaleTimeString("es-CL",{hour:'2-digit',minute:'2-digit'});
+document.getElementById("fecha").innerHTML =
+new Date().toLocaleDateString("es-CL");
 
-function guardarRegistro(){
+function guardar(){
 
 let nombre = document.getElementById("nombre").value;
 let fecha = document.getElementById("fechaVGI").value;
 
 if(nombre=="" || fecha==""){
-alert("Completa nombre y fecha");
+alert("Completa datos");
 return;
 }
 
-let fechaLimite = new Date(fecha);
 let hoy = new Date();
+let evalua = new Date(fecha);
 
-let diferencia = Math.floor((fechaLimite - hoy)/(1000*60*60*24));
+// SUMA 1 AÑO
+let proxima = new Date(evalua);
+proxima.setFullYear(proxima.getFullYear()+1);
 
-let nuevo = document.createElement("input");
-nuevo.className = "item";
+// DIFERENCIA EN DÍAS
+let dias = Math.floor((proxima - hoy)/(1000*60*60*24));
 
-if(diferencia <= 30){
-nuevo.value = nombre + " - " + fechaLimite.toLocaleDateString("es-CL");
-document.getElementById("listaVencer").appendChild(nuevo);
+let div = document.createElement("div");
+div.className="item";
+div.innerHTML = nombre + " - vence " + proxima.toLocaleDateString("es-CL");
+
+// CLASIFICACIÓN AUTOMÁTICA
+if(dias < 0){
+document.getElementById("vencidos").appendChild(div);
+}
+else if(dias <= 30){
+document.getElementById("proximos").appendChild(div);
 }
 else{
-nuevo.value = nombre;
-document.getElementById("listaDia").appendChild(nuevo);
+document.getElementById("aldia").appendChild(div);
 }
 
 document.getElementById("nombre").value="";
 document.getElementById("fechaVGI").value="";
 
-actualizarContadores();
+actualizar();
 }
 
-function actualizarContadores(){
+function actualizar(){
 
-let manualVencer = document.querySelectorAll(".card:nth-of-type(2) input").length;
-let manualDia = document.querySelectorAll(".card:nth-of-type(3) input").length;
+let v = document.querySelectorAll("#vencidos .item").length;
+let p = document.querySelectorAll("#proximos .item").length;
+let a = document.querySelectorAll("#aldia .item").length;
 
-let nuevosVencer = document.querySelectorAll("#listaVencer input").length;
-let nuevosDia = document.querySelectorAll("#listaDia input").length;
-
-let totalVencer = manualVencer + nuevosVencer;
-let totalDia = manualDia + nuevosDia;
-
-document.getElementById("vencenHoy").value = totalVencer;
-document.getElementById("pendientes").value = totalVencer;
-document.getElementById("completados").value = totalDia;
-document.getElementById("total").value = totalVencer + totalDia;
+document.getElementById("vencidosCount").value = v;
+document.getElementById("proximosCount").value = p;
+document.getElementById("aldiaCount").value = a;
+document.getElementById("total").value = v + p + a;
 }
 
-actualizarContadores();
+actualizar();
 
 </script>
 
