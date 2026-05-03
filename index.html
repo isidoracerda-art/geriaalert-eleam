@@ -29,7 +29,7 @@ grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
 gap:20px;
 }
 
-input,button{
+input,select,button{
 width:100%;
 padding:10px;
 margin-top:8px;
@@ -93,7 +93,13 @@ margin-top:8px;
 <input id="nombre" placeholder="Nombre residente">
 <input type="date" id="fechaVGI">
 
-<button onclick="guardar()">Guardar VGI</button>
+<select id="estado">
+<option value="aldia">🟢 Al día</option>
+<option value="proximo">🟡 Próximo</option>
+<option value="vencido">🔴 Vencido</option>
+</select>
+
+<button onclick="guardar()">Guardar</button>
 </div>
 
 <div class="grid">
@@ -122,47 +128,46 @@ margin-top:8px;
 document.getElementById("fecha").innerHTML =
 new Date().toLocaleDateString("es-CL");
 
+// GUARDAR
 function guardar(){
 
 let nombre = document.getElementById("nombre").value;
 let fecha = document.getElementById("fechaVGI").value;
+let estado = document.getElementById("estado").value;
 
 if(nombre=="" || fecha==""){
 alert("Completa datos");
 return;
 }
 
-let hoy = new Date();
+// calcular próxima fecha (solo informativo)
 let evalua = new Date(fecha);
-
-// SUMA 1 AÑO
 let proxima = new Date(evalua);
 proxima.setFullYear(proxima.getFullYear()+1);
-
-// DIFERENCIA EN DÍAS
-let dias = Math.floor((proxima - hoy)/(1000*60*60*24));
 
 let div = document.createElement("div");
 div.className="item";
 div.innerHTML = nombre + " - vence " + proxima.toLocaleDateString("es-CL");
 
-// CLASIFICACIÓN AUTOMÁTICA
-if(dias < 0){
+// CLASIFICACIÓN MANUAL
+if(estado=="vencido"){
 document.getElementById("vencidos").appendChild(div);
 }
-else if(dias <= 30){
+else if(estado=="proximo"){
 document.getElementById("proximos").appendChild(div);
 }
 else{
 document.getElementById("aldia").appendChild(div);
 }
 
+// limpiar
 document.getElementById("nombre").value="";
 document.getElementById("fechaVGI").value="";
 
 actualizar();
 }
 
+// CONTADORES
 function actualizar(){
 
 let v = document.querySelectorAll("#vencidos .item").length;
