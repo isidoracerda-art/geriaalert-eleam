@@ -95,9 +95,6 @@ background:linear-gradient(90deg,#16a34a,#22c55e);
 }
 
 .item{
-background:#f8fafc;
-padding:10px;
-border-radius:10px;
 margin-top:8px;
 }
 
@@ -130,25 +127,22 @@ opacity:.8;
 
 <div class="card">
 <h2>Total residentes</h2>
-<input value="68">
+<input id="total" readonly>
 </div>
 
 <div class="card">
 <h2 class="red">Vencen hoy</h2>
-<input value="6">
-<div class="status" style="background:#fee2e2;color:#dc2626;">🔴 Atención</div>
+<input id="vencenHoy" readonly>
 </div>
 
 <div class="card">
 <h2 class="yellow">Pendientes</h2>
-<input value="18">
-<div class="status" style="background:#fef3c7;color:#ca8a04;">🟡 Revisar</div>
+<input id="pendientes" readonly>
 </div>
 
 <div class="card">
 <h2 class="green">Completados</h2>
-<input value="50">
-<div class="status" style="background:#dcfce7;color:#16a34a;">🟢 Al día</div>
+<input id="completados" readonly>
 </div>
 
 </div>
@@ -162,7 +156,7 @@ opacity:.8;
 
 <div class="card">
 <h2>Cumplimiento mensual</h2>
-<strong>50 de 68 evaluados (74%)</strong>
+<strong>Automático</strong>
 <div class="progress">
 <div class="bar"></div>
 </div>
@@ -183,10 +177,7 @@ opacity:.8;
 <label>Nombre residente</label>
 <input id="nombre" placeholder="Ej: Dory González">
 
-<label>Tipo evaluación</label>
-<input value="VGI">
-
-<label>Fecha límite evaluación</label>
+<label>Fecha VGI</label>
 <input type="date" id="fechaVGI">
 
 <button onclick="guardarRegistro()">Guardar Registro</button>
@@ -224,6 +215,7 @@ Proyecto de Innovación Tecnológica • Internado 2026
 </div>
 
 <script>
+
 const hoy = new Date();
 document.getElementById("fechaActual").innerHTML =
 hoy.toLocaleDateString("es-CL") + " " +
@@ -258,7 +250,29 @@ document.getElementById("listaDia").appendChild(nuevo);
 
 document.getElementById("nombre").value="";
 document.getElementById("fechaVGI").value="";
+
+actualizarContadores();
 }
+
+function actualizarContadores(){
+
+let manualVencer = document.querySelectorAll(".card:nth-of-type(2) input").length;
+let manualDia = document.querySelectorAll(".card:nth-of-type(3) input").length;
+
+let nuevosVencer = document.querySelectorAll("#listaVencer input").length;
+let nuevosDia = document.querySelectorAll("#listaDia input").length;
+
+let totalVencer = manualVencer + nuevosVencer;
+let totalDia = manualDia + nuevosDia;
+
+document.getElementById("vencenHoy").value = totalVencer;
+document.getElementById("pendientes").value = totalVencer;
+document.getElementById("completados").value = totalDia;
+document.getElementById("total").value = totalVencer + totalDia;
+}
+
+actualizarContadores();
+
 </script>
 
 </body>
