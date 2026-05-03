@@ -51,6 +51,19 @@ background:#f1f5f9;
 padding:10px;
 border-radius:10px;
 margin-top:8px;
+font-size:14px;
+}
+
+.actions{
+margin-top:8px;
+display:flex;
+gap:5px;
+}
+
+.actions button{
+flex:1;
+padding:5px;
+font-size:12px;
 }
 </style>
 </head>
@@ -128,7 +141,59 @@ margin-top:8px;
 document.getElementById("fecha").innerHTML =
 new Date().toLocaleDateString("es-CL");
 
-// GUARDAR
+function crearItem(texto){
+
+let div = document.createElement("div");
+div.className="item";
+
+let contenido = document.createElement("div");
+contenido.innerText = texto;
+
+let acciones = document.createElement("div");
+acciones.className="actions";
+
+let mover = document.createElement("button");
+mover.innerText="Mover";
+
+let eliminar = document.createElement("button");
+eliminar.innerText="Eliminar";
+
+acciones.appendChild(mover);
+acciones.appendChild(eliminar);
+
+div.appendChild(contenido);
+div.appendChild(acciones);
+
+// EVENTOS
+mover.onclick = function(){
+moverEstado(div);
+}
+
+eliminar.onclick = function(){
+div.remove();
+actualizar();
+}
+
+return div;
+}
+
+function moverEstado(item){
+
+let padre = item.parentElement.id;
+
+if(padre=="aldia"){
+document.getElementById("proximos").appendChild(item);
+}
+else if(padre=="proximos"){
+document.getElementById("vencidos").appendChild(item);
+}
+else{
+document.getElementById("aldia").appendChild(item);
+}
+
+actualizar();
+}
+
 function guardar(){
 
 let nombre = document.getElementById("nombre").value;
@@ -140,34 +205,30 @@ alert("Completa datos");
 return;
 }
 
-// calcular próxima fecha (solo informativo)
 let evalua = new Date(fecha);
 let proxima = new Date(evalua);
 proxima.setFullYear(proxima.getFullYear()+1);
 
-let div = document.createElement("div");
-div.className="item";
-div.innerHTML = nombre + " - vence " + proxima.toLocaleDateString("es-CL");
+let texto = nombre + " - vence " + proxima.toLocaleDateString("es-CL");
 
-// CLASIFICACIÓN MANUAL
+let item = crearItem(texto);
+
 if(estado=="vencido"){
-document.getElementById("vencidos").appendChild(div);
+document.getElementById("vencidos").appendChild(item);
 }
 else if(estado=="proximo"){
-document.getElementById("proximos").appendChild(div);
+document.getElementById("proximos").appendChild(item);
 }
 else{
-document.getElementById("aldia").appendChild(div);
+document.getElementById("aldia").appendChild(item);
 }
 
-// limpiar
 document.getElementById("nombre").value="";
 document.getElementById("fechaVGI").value="";
 
 actualizar();
 }
 
-// CONTADORES
 function actualizar(){
 
 let v = document.querySelectorAll("#vencidos .item").length;
